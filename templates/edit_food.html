@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Food - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite Admin
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/admin/orders">
+            All Orders
+        </a>
+
+        <a href="/admin/foods">
+            Manage Food
+        </a>
+
+        <a href="/admin/add-food">
+            Add Food
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="cart-section">
+
+    <h1>Edit Food Item</h1>
+
+    <div class="cart-container">
+
+        <form method="POST">
+
+            <p>
+                <label>Food Name</label>
+            </p>
+
+            <input
+                type="text"
+                name="name"
+                value="{{ food.name }}"
+                required
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Description</label>
+            </p>
+
+            <input
+                type="text"
+                name="description"
+                value="{{ food.description }}"
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Price</label>
+            </p>
+
+            <input
+                type="number"
+                name="price"
+                value="{{ food.price }}"
+                step="0.01"
+                required
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Category</label>
+            </p>
+
+            <select name="category" required>
+
+                <option value="Snacks"
+                    {% if food.category == "Snacks" %}selected{% endif %}>
+                    Snacks
+                </option>
+
+                <option value="Meals"
+                    {% if food.category == "Meals" %}selected{% endif %}>
+                    Meals
+                </option>
+
+                <option value="Drinks"
+                    {% if food.category == "Drinks" %}selected{% endif %}>
+                    Drinks
+                </option>
+
+                <option value="Desserts"
+                    {% if food.category == "Desserts" %}selected{% endif %}>
+                    Desserts
+                </option>
+
+            </select>
+
+            <br><br>
+
+
+            <p>
+                <label>Food Icon</label>
+            </p>
+
+            <select name="icon" required>
+
+                <option value="🍔"
+                    {% if food.icon == "🍔" %}selected{% endif %}>
+                    🍔 Burger
+                </option>
+
+                <option value="🍕"
+                    {% if food.icon == "🍕" %}selected{% endif %}>
+                    🍕 Pizza
+                </option>
+
+                <option value="🥪"
+                    {% if food.icon == "🥪" %}selected{% endif %}>
+                    🥪 Sandwich
+                </option>
+
+                <option value="🥟"
+                    {% if food.icon == "🥟" %}selected{% endif %}>
+                    🥟 Samosa
+                </option>
+
+                <option value="🍜"
+                    {% if food.icon == "🍜" %}selected{% endif %}>
+                    🍜 Maggi / Noodles
+                </option>
+
+                <option value="🥤"
+                    {% if food.icon == "🥤" %}selected{% endif %}>
+                    🥤 Cold Drink
+                </option>
+
+                <option value="🌯"
+                    {% if food.icon == "🌯" %}selected{% endif %}>
+                    🌯 Roll
+                </option>
+
+                <option value="🍰"
+                    {% if food.icon == "🍰" %}selected{% endif %}>
+                    🍰 Cake / Dessert
+                </option>
+
+                <option value="🍴"
+                    {% if food.icon == "🍴" %}selected{% endif %}>
+                    🍴 Other Food
+                </option>
+
+            </select>
+
+            <br><br>
+
+            <button type="submit">
+                Update Food
+            </button>
+
+            <a href="/admin/foods">
+                <button type="button">
+                    Cancel
+                </button>
+            </a>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <h2>CampusBite</h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

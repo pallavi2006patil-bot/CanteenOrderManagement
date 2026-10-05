@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Order Details - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite Admin
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/admin">
+            Dashboard
+        </a>
+
+        <a href="/admin/orders">
+            All Orders
+        </a>
+
+        <a href="/admin/foods">
+            Manage Food
+        </a>
+
+        <a href="/admin/add-food">
+            Add Food
+        </a>
+
+        <a href="/admin/logout">
+            Admin Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- Order Details -->
+
+<section class="cart-section">
+
+    <h1>Order Details</h1>
+
+
+    {% if order %}
+
+    <!-- Customer Information -->
+
+    <div class="cart-container">
+
+        <div class="cart-item">
+
+            <div class="cart-item-info">
+
+                <h3>
+                    Order Token:
+                    {{ order.order_token }}
+                </h3>
+
+                <p>
+                    Customer:
+                    {{ order.name }}
+                </p>
+
+                <p>
+                    Email:
+                    {{ order.email }}
+                </p>
+
+                <p>
+                    Order Date:
+                    {{ order.order_date }}
+                </p>
+
+                <p>
+                    Status:
+                    <strong>{{ order.status }}</strong>
+                </p>
+
+            </div>
+
+            <div class="item-total">
+
+                ₹{{ order.total_amount }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <br>
+
+
+    <!-- Food Items -->
+
+    <h2>Ordered Food Items</h2>
+
+    <div class="cart-container">
+
+        {% if items %}
+
+            {% for item in items %}
+
+            <div class="cart-item">
+
+                <div class="cart-food-icon">
+                    🍴
+                </div>
+
+                <div class="cart-item-info">
+
+                    <h3>
+                        {{ item.name }}
+                    </h3>
+
+                    <p>
+                        Price:
+                        ₹{{ item.price }}
+                    </p>
+
+                    <p>
+                        Quantity:
+                        {{ item.quantity }}
+                    </p>
+
+                </div>
+
+                <div class="item-total">
+
+                    ₹{{ item.item_total }}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-cart">
+
+                <div class="empty-icon">
+                    📦
+                </div>
+
+                <h2>
+                    No Food Items Found
+                </h2>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <br>
+
+    <a href="/admin/orders">
+
+        <button type="button">
+            ← Back to Orders
+        </button>
+
+    </a>
+
+
+    {% else %}
+
+    <div class="empty-cart">
+
+        <div class="empty-icon">
+            ❌
+        </div>
+
+        <h2>
+            Order Not Found
+        </h2>
+
+        <p>
+            This order does not exist.
+        </p>
+
+        <br>
+
+        <a href="/admin/orders">
+            Back to Orders
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</section>
+
+
+<!-- Footer -->
+
+<footer class="footer">
+
+    <h2>
+        CampusBite
+    </h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Orders - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite Admin
+    </div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/admin/orders">All Orders</a>
+        <a href="/admin/logout">Admin Logout</a>
+    </div>
+
+</nav>
+
+
+<section class="cart-section">
+
+    <h1>All Orders</h1>
+
+    {% if orders %}
+
+        <div class="cart-container">
+
+            {% for order in orders %}
+
+                <div class="cart-item">
+
+                    <div class="cart-item-info">
+
+                        <h3>
+                            Order Token:
+                            {{ order.order_token }}
+                        </h3>
+
+                        <p>
+                            Customer:
+                            {{ order.name }}
+                        </p>
+
+                        <p>
+                            Email:
+                            {{ order.email }}
+                        </p>
+
+                        <p>
+                            Order Date:
+                            {{ order.order_date }}
+                        </p>
+
+                        <p>
+                            Status:
+                            <strong>
+                                {{ order.status }}
+                            </strong>
+                        </p>
+                        <form action="/admin/update-status/{{ order.id }}" method="POST">
+
+    <select name="status">
+
+        <option value="Pending"
+            {% if order.status == "Pending" %}selected{% endif %}>
+            Pending
+        </option>
+
+        <option value="Preparing"
+            {% if order.status == "Preparing" %}selected{% endif %}>
+            Preparing
+        </option>
+
+        <option value="Ready"
+            {% if order.status == "Ready" %}selected{% endif %}>
+            Ready
+        </option>
+
+        <option value="Delivered"
+            {% if order.status == "Delivered" %}selected{% endif %}>
+            Delivered
+        </option>
+
+    </select>
+
+    <button type="submit">
+        Update Status
+    </button>
+
+</form>
+
+                    </div>
+
+
+                    <div class="item-total">
+
+                        ₹{{ order.total_amount }}
+
+                    </div>
+                    <a href="/admin/order/{{ order.id }}">
+    <button type="button">
+        View Details
+    </button>
+</a>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-cart">
+
+            <div class="empty-icon">
+                📦
+            </div>
+
+            <h2>No Orders Found</h2>
+
+            <p>
+                There are currently no customer orders.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<footer class="footer">
+
+    <h2>CampusBite</h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+</html>

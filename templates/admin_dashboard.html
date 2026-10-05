@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+    <div class="logo">
+        🍴 CampusBite Admin
+    </div>
+
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/admin">Dashboard</a>
+        <a href="/admin/orders">Orders</a>
+        <a href="/admin/foods">Manage Food</a>
+        <a href="/admin/add-food">Add Food</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+
+<!-- ================= ADMIN DASHBOARD ================= -->
+
+<section class="admin-dashboard">
+
+    <!-- Header -->
+
+    <div class="admin-header">
+
+        <div>
+            <p class="admin-small-title">ADMIN PANEL</p>
+
+            <h1>Dashboard</h1>
+
+            <p>
+                Welcome back! Manage your canteen orders and food items.
+            </p>
+        </div>
+
+        <div class="admin-header-icon">
+            🍽️
+        </div>
+
+    </div>
+
+
+    <!-- ================= STATISTICS ================= -->
+
+    <div class="admin-stats">
+
+        <!-- Users -->
+
+        <div class="admin-stat-card blue">
+            <div class="stat-icon">👥</div>
+
+            <div>
+                <p>Total Users</p>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Food -->
+
+        <div class="admin-stat-card orange">
+            <div class="stat-icon">🍔</div>
+
+            <div>
+                <p>Total Food Items</p>
+                <h2>{{ total_foods }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Orders -->
+
+        <div class="admin-stat-card purple">
+            <div class="stat-icon">📦</div>
+
+            <div>
+                <p>Total Orders</p>
+                <h2>{{ total_orders }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Sales -->
+
+        <div class="admin-stat-card green">
+            <div class="stat-icon">💰</div>
+
+            <div>
+                <p>Total Sales</p>
+                <h2>₹{{ total_sales }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Pending -->
+
+        <div class="admin-stat-card yellow">
+            <div class="stat-icon">🕐</div>
+
+            <div>
+                <p>Pending Orders</p>
+                <h2>{{ pending_orders }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Preparing -->
+
+        <div class="admin-stat-card cyan">
+            <div class="stat-icon">👨‍🍳</div>
+
+            <div>
+                <p>Preparing</p>
+                <h2>{{ preparing_orders }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Ready -->
+
+        <div class="admin-stat-card teal">
+            <div class="stat-icon">🔔</div>
+
+            <div>
+                <p>Ready Orders</p>
+                <h2>{{ ready_orders }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Delivered -->
+
+        <div class="admin-stat-card darkgreen">
+            <div class="stat-icon">✅</div>
+
+            <div>
+                <p>Delivered</p>
+                <h2>{{ delivered_orders }}</h2>
+            </div>
+        </div>
+
+
+        <!-- Cancelled -->
+
+        <div class="admin-stat-card red">
+            <div class="stat-icon">❌</div>
+
+            <div>
+                <p>Cancelled</p>
+                <h2>{{ cancelled_orders }}</h2>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- ================= MOST ORDERED FOOD ================= -->
+
+    <div class="admin-section-card most-food">
+
+        <div class="section-title">
+            <div>
+                <p class="section-label">POPULAR ITEM</p>
+                <h2>🏆 Most Ordered Food</h2>
+            </div>
+
+            <div class="trophy-icon">
+                🏆
+            </div>
+        </div>
+
+
+        {% if most_ordered_food %}
+
+        <div class="popular-food">
+
+            <div class="popular-food-icon">
+                🍔
+            </div>
+
+            <div>
+                <h3>{{ most_ordered_food.name }}</h3>
+
+                <p>
+                    Ordered
+                    <strong>{{ most_ordered_food.total_quantity }}</strong>
+                    times
+                </p>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <div class="no-data">
+            <span>🍽️</span>
+            <p>No food orders yet.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- ================= QUICK ACTIONS ================= -->
+
+    <div class="admin-section-card">
+
+        <div class="section-title">
+            <div>
+                <p class="section-label">MANAGEMENT</p>
+                <h2>Quick Actions</h2>
+            </div>
+        </div>
+
+
+        <div class="quick-actions">
+
+            <a href="/admin/orders" class="quick-action orders-action">
+                <span>📦</span>
+                <div>
+                    <strong>View Orders</strong>
+                    <small>Manage customer orders</small>
+                </div>
+            </a>
+
+
+            <a href="/admin/foods" class="quick-action food-action">
+                <span>🍔</span>
+                <div>
+                    <strong>Manage Food</strong>
+                    <small>Edit or delete food items</small>
+                </div>
+            </a>
+
+
+            <a href="/admin/add-food" class="quick-action add-action">
+                <span>➕</span>
+                <div>
+                    <strong>Add Food</strong>
+                    <small>Add a new menu item</small>
+                </div>
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= RECENT ORDERS ================= -->
+
+    <div class="admin-section-card">
+
+        <div class="section-title">
+
+            <div>
+                <p class="section-label">ORDER MANAGEMENT</p>
+                <h2>Recent Orders</h2>
+            </div>
+
+            <a href="/admin/orders" class="view-all">
+                View All →
+            </a>
+
+        </div>
+
+
+        {% if recent_orders %}
+
+        <div class="orders-table-container">
+
+            <table class="admin-orders-table">
+
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for order in recent_orders %}
+
+                    <tr>
+
+                        <td>
+                            <strong>
+                                {{ order.order_token }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+                            {{ order.name }}
+                        </td>
+
+
+                        <td>
+                            {{ order.order_date }}
+                        </td>
+
+
+                        <td>
+
+                            {% if order.status == "Pending" %}
+                                <span class="status-badge pending">
+                                    Pending
+                                </span>
+
+                            {% elif order.status == "Preparing" %}
+                                <span class="status-badge preparing">
+                                    Preparing
+                                </span>
+
+                            {% elif order.status == "Ready" %}
+                                <span class="status-badge ready">
+                                    Ready
+                                </span>
+
+                            {% elif order.status == "Delivered" %}
+                                <span class="status-badge delivered">
+                                    Delivered
+                                </span>
+
+                            {% elif order.status == "Cancelled" %}
+                                <span class="status-badge cancelled">
+                                    Cancelled
+                                </span>
+
+                            {% else %}
+                                <span class="status-badge">
+                                    {{ order.status }}
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+                            <strong>
+                                ₹{{ order.total_amount }}
+                            </strong>
+                        </td>
+
+
+                        <td>
+
+                            <a href="/admin/order/{{ order.id }}"
+                               class="view-order-btn">
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="no-orders">
+
+            <div>📦</div>
+
+            <h3>No Orders Yet</h3>
+
+            <p>
+                Recent customer orders will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <h2>🍴 CampusBite</h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+</html>

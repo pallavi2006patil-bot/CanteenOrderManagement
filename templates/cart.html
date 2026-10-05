@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>CampusBite - Cart</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar">
+
+        <div class="logo">
+            🍽️ CampusBite
+        </div>
+
+        <div class="nav-links">
+
+            <a href="/">
+                Home
+            </a>
+
+            <a href="/cart">
+                🛒 Cart
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- CART -->
+
+    <section class="cart-section">
+
+        <h1>
+            🛒 Your Cart
+        </h1>
+
+        <p class="cart-subtitle">
+            Review your selected items before placing the order.
+        </p>
+
+
+        <div id="cart-items">
+        </div>
+
+
+        <div class="cart-summary">
+
+            <h2>
+                Order Summary
+            </h2>
+
+            <div class="summary-row">
+
+                <span>
+                    Total Items
+                </span>
+
+                <span id="total-items">
+                    0
+                </span>
+
+            </div>
+
+
+            <div class="summary-row total">
+
+                <span>
+                    Total Amount
+                </span>
+
+                <span>
+                    ₹<span id="total-price">0</span>
+                </span>
+
+            </div>
+
+
+            <button class="place-order"
+                    onclick="placeOrder()">
+
+                Place Order
+
+            </button>
+
+
+            <a href="/"
+               class="continue-shopping">
+
+                ← Continue Shopping
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <h3>
+            🍽️ CampusBite
+        </h3>
+
+        <p>
+            Smart Canteen • Easy Ordering • Better Campus Experience
+        </p>
+
+    </footer>
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+
+</html>

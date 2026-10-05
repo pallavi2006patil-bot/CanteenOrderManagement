@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Food - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite Admin
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/admin/orders">
+            All Orders
+        </a>
+
+        <a href="/admin/add-food">
+            Add Food
+        </a>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<section class="cart-section">
+
+    <h1>Add New Food Item</h1>
+
+    <div class="cart-container">
+
+        <form method="POST">
+
+            <p>
+                <label>Food Name</label>
+            </p>
+
+            <input
+                type="text"
+                name="name"
+                placeholder="Enter food name"
+                required
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Description</label>
+            </p>
+
+            <input
+                type="text"
+                name="description"
+                placeholder="Enter description"
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Price</label>
+            </p>
+
+            <input
+                type="number"
+                name="price"
+                placeholder="Enter price"
+                step="0.01"
+                required
+            >
+
+            <br><br>
+
+
+            <p>
+                <label>Category</label>
+            </p>
+
+            <select name="category" required>
+
+                <option value="">
+                    Select Category
+                </option>
+
+                <option value="Snacks">
+                    Snacks
+                </option>
+
+                <option value="Meals">
+                    Meals
+                </option>
+
+                <option value="Drinks">
+                    Drinks
+                </option>
+
+                <option value="Desserts">
+                    Desserts
+                </option>
+
+            </select>
+            <br><br>
+
+<p>
+    <label>Food Icon</label>
+</p>
+
+<select name="icon" required>
+
+    <option value="">
+        Select Food Icon
+    </option>
+
+    <option value="🍔">
+        🍔 Burger
+    </option>
+
+    <option value="🍕">
+        🍕 Pizza
+    </option>
+
+    <option value="🥪">
+        🥪 Sandwich
+    </option>
+
+    <option value="🥟">
+        🥟 Samosa
+    </option>
+
+    <option value="🍜">
+        🍜 Maggi / Noodles
+    </option>
+
+    <option value="🥤">
+        🥤 Cold Drink
+    </option>
+
+    <option value="🌯">
+        🌯 Roll
+    </option>
+
+    <option value="🍰">
+        🍰 Cake / Dessert
+    </option>
+
+    <option value="🍴">
+        🍴 Other Food
+    </option>
+
+</select>
+
+            <br><br>
+
+
+            <button type="submit">
+                Add Food
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <h2>CampusBite</h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

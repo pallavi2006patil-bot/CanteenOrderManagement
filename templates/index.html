@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CampusBite - Canteen Order Management</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            👨‍🍳
+        </div>
+
+        <div class="brand-text">
+
+            <div class="logo">
+                CampusBite
+            </div>
+
+            <small>
+                Fresh Food • Happy Mood
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+        <a href="/" class="active">
+            Home
+        </a>
+
+        <a href="#menu">
+            Menu
+        </a>
+
+        <a href="#about">
+            About
+        </a>
+
+        <a href="/admin">
+            Admin Dashboard
+        </a>
+
+        <a href="/cart" class="cart-link">
+            🛒 Cart
+            <span id="cart-count">0</span>
+        </a>
+
+        <a href="/orders">
+            My Orders
+        </a>
+
+
+        {% if session.get("user_id") %}
+
+            <span class="welcome-user">
+                Welcome, {{ session.get("user_name") }}
+            </span>
+
+            <a href="/logout">
+                Logout
+            </a>
+
+        {% else %}
+
+            <a href="/login">
+                Login
+            </a>
+
+            <a href="/register" class="register-link">
+                Register
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</nav>
+
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <span class="hero-small-text">
+            WELCOME TO OUR CANTEEN
+        </span>
+
+        <h1>
+            Good Food.
+            <br>
+            <span>Better Mood.</span>
+        </h1>
+
+        <p>
+            Fresh, delicious and affordable food —
+            now just a click away!
+            Order your favourite meals, snacks,
+            drinks and more.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="#menu" class="hero-btn">
+                Explore Menu →
+            </a>
+
+            <a href="/cart" class="hero-secondary-btn">
+                🛒 View Cart
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-food">
+    <img
+        src="{{ url_for('static', filename='images/hero-burger.png') }}"
+        alt="Delicious Veg Burger"
+        class="hero-burger"
+    >
+</div>
+
+</section>
+
+
+
+<!-- ================= FEATURES ================= -->
+
+<section class="features">
+
+    <div class="feature-container">
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon green">
+                🌿
+            </div>
+
+            <div>
+                <h3>
+                    Fresh Ingredients
+                </h3>
+
+                <p>
+                    Fresh and tasty food
+                </p>
+            </div>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon orange">
+                👨‍🍳
+            </div>
+
+            <div>
+                <h3>
+                    Hygienic Food
+                </h3>
+
+                <p>
+                    Clean and safe preparation
+                </p>
+            </div>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon blue">
+                ⚡
+            </div>
+
+            <div>
+                <h3>
+                    Quick Service
+                </h3>
+
+                <p>
+                    Fast and easy ordering
+                </p>
+            </div>
+
+        </div>
+
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon purple">
+                ❤️
+            </div>
+
+            <div>
+                <h3>
+                    Great Taste
+                </h3>
+
+                <p>
+                    Food you'll love
+                </p>
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= CATEGORY SECTION ================= -->
+
+<section class="category-section" id="categories">
+
+    <div class="section-heading">
+        <h2>Our Menu Categories</h2>
+        <div class="heading-line"></div>
+    </div>
+
+    <div class="category-container">
+
+        <!-- FOOD -->
+        <div class="category-card food-category"
+             onclick="filterCategory('Meals')">
+
+            <div class="category-top-icon">🍽️</div>
+
+            <div class="category-info">
+                <h3>Food</h3>
+                <p>Main Course & Meals</p>
+
+                <button type="button">
+                    View Items →
+                </button>
+            </div>
+
+            <div class="category-image">
+                <img
+                    src="{{ url_for('static', filename='images/food-category.jpg') }}"
+                    alt="Food">
+            </div>
+
+        </div>
+
+
+        <!-- SNACKS -->
+        <div class="category-card snacks-category"
+             onclick="filterCategory('Snacks')">
+
+            <div class="category-top-icon">🍟</div>
+
+            <div class="category-info">
+                <h3>Snacks</h3>
+                <p>Quick Bites & Snacks</p>
+
+                <button type="button">
+                    View Items →
+                </button>
+            </div>
+
+            <div class="category-image">
+                <img
+                    src="{{ url_for('static', filename='images/snacks-category.jpg') }}"
+                    alt="Snacks">
+            </div>
+
+        </div>
+
+
+        <!-- COFFEE -->
+        <div class="category-card coffee-category"
+             onclick="filterCategory('Drinks')">
+
+            <div class="category-top-icon">☕</div>
+
+            <div class="category-info">
+                <h3>Coffee</h3>
+                <p>Hot & Cold Beverages</p>
+
+                <button type="button">
+                    View Items →
+                </button>
+            </div>
+
+            <div class="category-image">
+                <img
+                    src="{{ url_for('static', filename='images/coffee-category.jpg') }}"
+                    alt="Coffee">
+            </div>
+
+        </div>
+
+
+        <!-- ICE CREAM -->
+        <div class="category-card icecream-category"
+             onclick="filterCategory('Ice Cream')">
+
+            <div class="category-top-icon">🍦</div>
+
+            <div class="category-info">
+                <h3>Ice Cream</h3>
+                <p>Sweet Treats & More</p>
+
+                <button type="button">
+                    View Items →
+                </button>
+            </div>
+
+            <div class="category-image">
+                <img
+                    src="{{ url_for('static', filename='images/ice-cream-category.jpg') }}"
+                    alt="Ice Cream">
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= MENU SECTION ================= -->
+
+<section id="menu" class="menu-section">
+
+    <div class="menu-heading">
+
+        <div>
+
+            <span class="popular-label">
+                🔥 POPULAR ITEMS
+            </span>
+
+            <h2>
+                Our Delicious Menu
+            </h2>
+
+            <p class="section-subtitle">
+                Choose your favourite food and add it to your cart.
+            </p>
+
+        </div>
+
+        <a href="#menu" class="full-menu-btn">
+            View Full Menu →
+        </a>
+
+    </div>
+
+<!-- SEARCH FOOD -->
+
+<div class="menu-search">
+
+    <input
+        type="text"
+        id="menuSearch"
+        placeholder="🔎 Search food..."
+        oninput="filterMenu()"
+    >
+
+    <button
+        type="button"
+        onclick="showAllFoods()">
+        Show All
+    </button>
+
+</div>
+    <div class="menu-container">
+
+
+        {% for food in foods %}
+
+
+        <div class="menu-card" data-category="{{ food.category }}">
+
+
+            <div class="food-image">
+
+    <img
+        src="{{ url_for('static', filename='images/' ~ food.name|lower|replace(' ', '-') ~ '.jpg') }}"
+        alt="{{ food.name }}"
+    >
+
+</div>
+
+
+            <div class="menu-card-content">
+
+
+                <span class="category">
+                    {{ food.category }}
+                </span>
+
+
+                <h3>
+                    {{ food.name }}
+                </h3>
+
+
+                <p>
+                    {{ food.description }}
+                </p>
+
+
+                <div class="food-bottom">
+
+
+                    <h4>
+                        ₹{{ food.price }}
+                    </h4>
+
+
+                    <button
+    type="button"
+    class="add-cart-btn"
+    data-id="{{ food.id }}"
+    data-name="{{ food.name }}"
+    data-price="{{ food.price }}"
+    data-image="{{ url_for('static', filename='images/' ~ food.name|lower|replace(' ', '-') ~ '.jpg') }}"
+>
+    Add to Cart
+</button>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= ABOUT ================= -->
+
+<section id="about" class="about-section">
+
+    <div class="about-content">
+
+        <span class="about-label">
+            ABOUT CAMPUSBITE
+        </span>
+
+        <h2>
+            Smart Canteen.
+            <br>
+            Simple Ordering.
+        </h2>
+
+        <p>
+            CampusBite is a smart canteen order management
+            system designed for students and campus canteens.
+        </p>
+
+        <p>
+            Students can browse the menu, add food to their
+            cart, place orders and track their order status.
+        </p>
+
+        <p>
+            Our goal is to reduce waiting time and make
+            canteen ordering simple, fast and convenient.
+        </p>
+
+    </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="footer">
+
+    <div class="footer-content">
+
+        <div class="footer-logo">
+            👨‍🍳 CampusBite
+        </div>
+
+        <p>
+            Fresh • Tasty • Affordable
+        </p>
+
+        <p>
+            © 2026 CampusBite. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script src="{{ url_for('static', filename='js/script.js') }}">
+</script>
+</body>
+</html>

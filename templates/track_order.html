@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Track Order - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">Home</a>
+
+        <a href="/cart">🛒 Cart</a>
+
+        <a href="/orders">My Orders</a>
+
+        <a href="/logout">Logout</a>
+
+    </div>
+
+</nav>
+
+
+<section class="cart-section">
+
+    {% if order %}
+
+        <h1>Track Your Order</h1>
+
+        <div class="cart-container">
+
+            <div class="cart-item">
+
+                <div class="cart-item-info">
+
+                    <h3>
+                        Order Token:
+                        {{ order.order_token }}
+                    </h3>
+
+                    <p>
+                        Order Date:
+                        {{ order.order_date }}
+                    </p>
+
+                    <p>
+                        Total Amount:
+                        ₹{{ order.total_amount }}
+                    </p>
+
+                    <p>
+                        Current Status:
+                        <strong>{{ order.status }}</strong>
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <br>
+
+
+        <h2>Order Progress</h2>
+
+        <div class="cart-container">
+
+            <div class="cart-item">
+
+                <div class="cart-item-info">
+
+                    <p>
+                        {% if order.status in
+                        ["Pending", "Preparing", "Ready", "Delivered"] %}
+                            🟢 Order Placed
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        {% if order.status in
+                        ["Preparing", "Ready", "Delivered"] %}
+                            🟢 Preparing
+                        {% else %}
+                            ⚪ Preparing
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        {% if order.status in
+                        ["Ready", "Delivered"] %}
+                            🟢 Ready
+                        {% else %}
+                            ⚪ Ready
+                        {% endif %}
+                    </p>
+
+                    <p>
+                        {% if order.status == "Delivered" %}
+                            🟢 Delivered
+                        {% else %}
+                            ⚪ Delivered
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <br>
+
+        <a href="/orders">
+            <button type="button">
+                ← Back to My Orders
+            </button>
+        </a>
+
+    {% else %}
+
+        <div class="empty-cart">
+
+            <div class="empty-icon">
+                ❌
+            </div>
+
+            <h2>
+                Order Not Found
+            </h2>
+
+            <a href="/orders">
+                Back to My Orders
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+<footer class="footer">
+
+    <h2>
+        CampusBite
+    </h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+</body>
+
+</html>

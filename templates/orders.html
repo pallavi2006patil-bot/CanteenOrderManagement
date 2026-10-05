@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>My Orders - CampusBite</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="logo">
+        CampusBite
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/">
+            Home
+        </a>
+
+        <a href="/cart">
+            🛒 Cart
+        </a>
+
+        <a href="/orders">
+            My Orders
+        </a>
+
+        <span class="welcome-user">
+            Welcome, {{ session.get("user_name") }}
+        </span>
+
+        <a href="/logout">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- ORDERS -->
+
+<section class="cart-section">
+
+    <h1>
+        My Orders
+    </h1>
+
+
+    {% if orders %}
+
+        <div class="cart-container">
+
+            {% for order in orders %}
+
+                <div class="cart-item">
+
+                    <div class="cart-item-info">
+
+                        <h3>
+                            Order Token:
+                            {{ order.order_token }}
+                        </h3>
+
+                        <p>
+                            Order Date:
+                            {{ order.order_date }}
+                        </p>
+
+                        <p>
+                            Status:
+                            <strong>
+
+                                {% if order.status == "Pending" %}
+                                    🕐 Pending
+
+                                {% elif order.status == "Preparing" %}
+                                    👨‍🍳 Preparing
+
+                                {% elif order.status == "Ready" %}
+                                    ✅ Ready
+
+                                {% elif order.status == "Delivered" %}
+                                    🎉 Delivered
+
+                                {% else %}
+                                    {{ order.status }}
+
+                                {% endif %}
+
+                            </strong>
+                        </p>
+
+                    </div>
+
+
+                    <div class="item-total">
+
+                        ₹{{ order.total_amount }}
+
+                    </div>
+
+
+                    <!-- TRACK ORDER -->
+
+                    <a href="/track-order/{{ order.id }}">
+
+                        <button type="button">
+                            Track Order
+                        </button>
+
+                    </a>
+
+
+                    <!-- CANCEL ORDER -->
+
+                    {% if order.status in ['Pending', 'Preparing'] %}
+
+                    <form action="/cancel-order/{{ order.id }}"
+                          method="POST"
+                          style="display:inline;"
+                          onsubmit="return confirm('Are you sure you want to cancel this order?');">
+
+                        <button type="submit">
+                            Cancel Order
+                        </button>
+
+                    </form>
+
+                    {% endif %}
+
+
+                    <!-- READY NOTIFICATION -->
+
+                    {% if order.status == "Ready" %}
+
+                    <div class="ready-notification">
+
+                        🔔
+                        <strong>
+                            Your order is ready!
+                        </strong>
+
+                        <p>
+                            Please collect your order from the canteen.
+                        </p>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- CANCELLED ORDER -->
+
+                    {% if order.status == "Cancelled" %}
+
+                    <p>
+                        <strong>
+                            Order Cancelled
+                        </strong>
+                    </p>
+
+                    <p>
+                        Refund Status:
+                        {{ order.refund_status }}
+                    </p>
+
+                    <p>
+                        Refund Amount:
+                        ₹{{ order.refund_amount }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <!-- DELIVERED ORDER -->
+
+                    {% if order.status == "Delivered" %}
+
+
+                    <!-- CUSTOMER REVIEWS -->
+
+                    {% if order["reviews"] %}
+
+                    <div class="customer-reviews">
+
+                        <h3>
+                            ⭐ Customer Reviews
+                        </h3>
+
+
+                        {% for review in order["reviews"] %}
+
+                        <div class="customer-review-box">
+
+                            <h4>
+                                {{ review.name }}
+                            </h4>
+
+                            <p>
+                                ⭐ {{ review.rating }}/5
+                            </p>
+
+                            <p>
+                                "{{ review.review }}"
+                            </p>
+
+                            <p>
+                                — Customer
+                            </p>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- RATE YOUR FOOD -->
+
+                    {% for item in order["items"] %}
+
+                        {% set ns = namespace(reviewed=false) %}
+
+
+                        {% for review in order["reviews"] %}
+
+                            {% if review.food_id == item.food_id %}
+
+                                {% set ns.reviewed = true %}
+
+                            {% endif %}
+
+                        {% endfor %}
+
+
+                        {% if not ns.reviewed %}
+
+                        <div class="rating-section">
+
+                            <h3>
+                                ⭐ Rate Your Food
+                            </h3>
+
+
+                            <div class="review-box">
+
+                                <h4>
+                                    {{ item.name }}
+                                </h4>
+
+
+                                <form action="/add-review/{{ order.id }}/{{ item.food_id }}"
+                                      method="POST">
+
+
+                                    <label>
+                                        Rating:
+                                    </label>
+
+
+                                    <select name="rating"
+                                            required>
+
+                                        <option value="">
+                                            Select Rating
+                                        </option>
+
+                                        <option value="5">
+                                            ⭐⭐⭐⭐⭐ Excellent
+                                        </option>
+
+                                        <option value="4">
+                                            ⭐⭐⭐⭐ Very Good
+                                        </option>
+
+                                        <option value="3">
+                                            ⭐⭐⭐ Good
+                                        </option>
+
+                                        <option value="2">
+                                            ⭐⭐ Fair
+                                        </option>
+
+                                        <option value="1">
+                                            ⭐ Poor
+                                        </option>
+
+                                    </select>
+
+
+                                    <br><br>
+
+
+                                    <textarea
+                                        name="review"
+                                        placeholder="Write your review..."
+                                        rows="3"
+                                        required></textarea>
+
+
+                                    <br>
+
+
+                                    <button type="submit">
+                                        Submit Review
+                                    </button>
+
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+
+                    {% endif %}
+
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- NO ORDERS -->
+
+        <div class="empty-cart">
+
+            <div class="empty-icon">
+                📦
+            </div>
+
+            <h2>
+                No Orders Yet
+            </h2>
+
+            <p>
+                Your placed orders will appear here.
+            </p>
+
+            <br>
+
+            <a href="/">
+                Browse Menu
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+</section>
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    <h2>
+        CampusBite
+    </h2>
+
+    <p>
+        Smart • Fast • Easy Canteen Ordering
+    </p>
+
+    <p>
+        © 2026 CampusBite. All Rights Reserved.
+    </p>
+
+</footer>
+
+
+</body>
+
+</html>
