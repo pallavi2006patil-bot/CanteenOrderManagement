@@ -64,7 +64,50 @@
             <h2>
                 Order Summary
             </h2>
+<!-- COUPON SECTION -->
 
+<div class="coupon-section">
+
+    <h3>
+        🎟️ Apply Coupon
+    </h3>
+
+    <div class="coupon-box">
+
+        <input
+            type="text"
+            id="coupon-code"
+            placeholder="Enter coupon code"
+        >
+
+        <button
+            type="button"
+            onclick="applyCoupon()">
+
+            Apply
+
+        </button>
+<div class="available-coupon">
+
+    <h4>🎁 Available Coupon</h4>
+
+    <div class="coupon-card">
+
+    <div>
+        <strong>CANTEEN10</strong>
+
+        <p>
+            Get 10% OFF on orders above ₹100
+        </p>
+    </div>
+
+</div>
+</div>
+    </div>
+
+    <p id="coupon-message"></p>
+
+</div>
             <div class="summary-row">
 
                 <span>
@@ -77,18 +120,41 @@
 
             </div>
 
+<div class="summary-row">
 
+    <span>
+        Subtotal
+    </span>
+
+    <span>
+        ₹<span id="subtotal-price">0</span>
+    </span>
+
+</div>
+
+
+<div class="summary-row coupon-discount-row">
+
+    <span>
+        🎟️ Coupon Discount
+    </span>
+
+    <span>
+        -₹<span id="coupon-discount">0</span>
+    </span>
+
+</div>
             <div class="summary-row total">
 
-                <span>
-                    Total Amount
-                </span>
+    <span>
+        Final Total
+    </span>
 
-                <span>
-                    ₹<span id="total-price">0</span>
-                </span>
+    <span>
+        ₹<span id="total-price">0</span>
+    </span>
 
-            </div>
+</div>
 
 
             <button class="place-order"

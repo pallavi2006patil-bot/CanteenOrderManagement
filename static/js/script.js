@@ -285,11 +285,13 @@ function updateSummary() {
     });
 
 
+    let finalPrice =
+        totalPrice - couponDiscount;
+
+
+    // Total Items
     let itemsElement =
         document.getElementById("total-items");
-
-    let priceElement =
-        document.getElementById("total-price");
 
 
     if (itemsElement) {
@@ -300,27 +302,180 @@ function updateSummary() {
     }
 
 
+    // Subtotal
+    let subtotalElement =
+        document.getElementById("subtotal-price");
+
+
+    if (subtotalElement) {
+
+        subtotalElement.innerText =
+            totalPrice.toFixed(2);
+
+    }
+
+
+    // Coupon Discount
+    let discountElement =
+        document.getElementById("coupon-discount");
+
+
+    if (discountElement) {
+
+        discountElement.innerText =
+            couponDiscount.toFixed(2);
+
+    }
+
+
+    // Final Total
+    let priceElement =
+        document.getElementById("total-price");
+
+
     if (priceElement) {
 
         priceElement.innerText =
-            totalPrice;
+            finalPrice.toFixed(2);
 
     }
 
 }
+// -----------------------------
+// Coupon
+// -----------------------------
 
+let appliedCoupon = null;
+let couponDiscount = 0;
+
+
+function applyCoupon() {
+
+    const couponInput =
+        document.getElementById("coupon-code");
+
+    const message =
+        document.getElementById("coupon-message");
+
+
+    if (!couponInput) {
+        return;
+    }
+
+
+    const couponCode =
+        couponInput.value.trim().toUpperCase();
+
+
+    if (couponCode === "") {
+
+        message.innerText =
+            "Please enter a coupon code.";
+
+        message.style.color = "red";
+
+        return;
+    }
+
+
+    fetch("/apply-coupon", {
+
+        method: "POST",
+
+        headers: {
+            "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+            coupon_code: couponCode,
+
+            cart: cart
+
+        })
+
+    })
+
+    .then(response => response.json())
+
+    .then(data => {
+
+        if (data.success) {
+
+            appliedCoupon = data.coupon_code;
+
+            couponDiscount =
+                Number(data.discount);
+
+
+            message.innerText =
+                "✓ " +
+                data.message +
+                " " +
+                data.discount_percent +
+                "% discount applied.";
+
+            message.style.color = "green";
+
+
+            updateSummary();
+
+        }
+
+        else {
+
+            appliedCoupon = null;
+
+            couponDiscount = 0;
+
+
+            message.innerText =
+                "✕ " + data.message;
+
+            message.style.color = "red";
+
+
+            updateSummary();
+
+        }
+
+    })
+
+    .catch(error => {
+
+        console.error(error);
+
+        message.innerText =
+            "Something went wrong.";
+
+        message.style.color = "red";
+
+    });
+
+}
+function useCoupon(code) {
+
+    const couponInput =
+        document.getElementById("coupon-code");
+
+    if (couponInput) {
+
+        couponInput.value = code;
+
+    }
+
+    applyCoupon();
+
+}
 
 // Place order
 function placeOrder() {
 
     if (cart.length === 0) {
 
-        alert(
-            "Your cart is empty!"
-        );
+        alert("Your cart is empty!");
 
         return;
-
     }
 
 
@@ -329,23 +484,22 @@ function placeOrder() {
         method: "POST",
 
         headers: {
-
-            "Content-Type":
-                "application/json"
-
+            "Content-Type": "application/json"
         },
 
         body: JSON.stringify({
 
-            cart: cart
+            cart: cart,
+
+            coupon_code: appliedCoupon,
+
+            coupon_discount: couponDiscount
 
         })
 
     })
 
-
     .then(response => response.json())
-
 
     .then(data => {
 
@@ -368,6 +522,10 @@ function placeOrder() {
 
             cart = [];
 
+            appliedCoupon = null;
+
+            couponDiscount = 0;
+
 
             displayCart();
 
@@ -385,7 +543,6 @@ function placeOrder() {
 
     })
 
-
     .catch(error => {
 
         console.error(error);
@@ -397,8 +554,6 @@ function placeOrder() {
     });
 
 }
-
-
 // Run when page loads
 document.addEventListener(
     "DOMContentLoaded",

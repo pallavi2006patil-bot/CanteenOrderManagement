@@ -189,9 +189,11 @@
 
         <div class="popular-food">
 
-            <div class="popular-food-icon">
-                🍔
-            </div>
+            <img
+        src="{{ url_for('static', filename='images/' ~ most_ordered_food.name|lower|replace(' ', '-') ~ '.jpg') }}"
+        alt="{{ most_ordered_food.name }}"
+        class="popular-food-image"
+    >
 
             <div>
                 <h3>{{ most_ordered_food.name }}</h3>

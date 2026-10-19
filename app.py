@@ -144,20 +144,100 @@ def login():
             )
 
     return render_template("login.html")
+@app.route("/apply-coupon", methods=["POST"])
+def apply_coupon():
 
+    if "user_id" not in session:
+        return {
+            "success": False,
+            "message": "Please login first"
+        }
 
-# -----------------------------
-# Place Order
-# -----------------------------
+    data = request.get_json()
+
+    coupon_code = data.get("coupon_code", "").strip().upper()
+    cart_items = data.get("cart", [])
+
+    if not coupon_code:
+        return {
+            "success": False,
+            "message": "Please enter coupon code"
+        }
+
+    if not cart_items:
+        return {
+            "success": False,
+            "message": "Cart is empty"
+        }
+
+    total_amount = 0
+
+    for item in cart_items:
+        total_amount += (
+            float(item["price"]) *
+            int(item["quantity"])
+        )
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT *
+        FROM coupons
+        WHERE code = %s
+        AND status = 'Active'
+    """, (coupon_code,))
+
+    coupon = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if not coupon:
+        return {
+            "success": False,
+            "message": "Invalid coupon code"
+        }
+
+    if total_amount < float(coupon["min_order_amount"]):
+        return {
+            "success": False,
+            "message": "Minimum order amount is ₹" +
+                       str(coupon["min_order_amount"])
+        }
+
+    discount = (
+        total_amount *
+        int(coupon["discount_percent"]) /
+        100
+    )
+
+    final_amount = total_amount - discount
+
+    return {
+        "success": True,
+        "message": "Coupon applied successfully!",
+        "coupon_code": coupon_code,
+        "discount_percent": coupon["discount_percent"],
+        "discount": round(discount, 2),
+        "total": round(total_amount, 2),
+        "final_amount": round(final_amount, 2)
+    }
+
 @app.route("/place-order", methods=["POST"])
 def place_order():
 
     if "user_id" not in session:
-        return redirect("/login")
+        return {
+            "success": False,
+            "message": "Please login first"
+        }
 
     data = request.get_json()
 
     cart_items = data.get("cart", [])
+    coupon_code = data.get("coupon_code")
+    coupon_discount = float(data.get("coupon_discount", 0))
 
     if not cart_items:
         return {
@@ -166,8 +246,9 @@ def place_order():
         }
 
     connection = get_db_connection()
-    cursor = connection.cursor()
+    cursor = connection.cursor(dictionary=True)
 
+    # Calculate cart total
     total_amount = 0
 
     for item in cart_items:
@@ -177,8 +258,56 @@ def place_order():
             int(item["quantity"])
         )
 
+    # Validate coupon again on backend
+    final_amount = total_amount
+    actual_discount = 0
+
+    if coupon_code:
+
+        cursor.execute("""
+            SELECT *
+            FROM coupons
+            WHERE code = %s
+            AND status = 'Active'
+        """, (coupon_code,))
+
+        coupon = cursor.fetchone()
+
+        if not coupon:
+
+            cursor.close()
+            connection.close()
+
+            return {
+                "success": False,
+                "message": "Invalid coupon code"
+            }
+
+        # Check minimum order amount
+        if total_amount < float(coupon["min_order_amount"]):
+
+            cursor.close()
+            connection.close()
+
+            return {
+                "success": False,
+                "message": "Minimum order amount is ₹" +
+                           str(coupon["min_order_amount"])
+            }
+
+        # Calculate actual discount
+        actual_discount = (
+            total_amount *
+            int(coupon["discount_percent"]) /
+            100
+        )
+
+        final_amount = total_amount - actual_discount
+
+    # Generate order token
     order_token = "CB" + str(random.randint(1000, 9999))
 
+    # Insert order
     order_query = """
     INSERT INTO orders
     (user_id, order_token, total_amount, status)
@@ -190,13 +319,14 @@ def place_order():
         (
             session["user_id"],
             order_token,
-            total_amount,
+            round(final_amount, 2),
             "Pending"
         )
     )
 
     order_id = cursor.lastrowid
 
+    # Insert order items
     item_query = """
     INSERT INTO order_items
     (order_id, food_id, quantity, price)
@@ -223,9 +353,9 @@ def place_order():
     return {
         "success": True,
         "order_token": order_token,
-        "total": total_amount
+        "total": round(final_amount, 2),
+        "discount": round(actual_discount, 2)
     }
-
 
 # -----------------------------
 # My Orders
